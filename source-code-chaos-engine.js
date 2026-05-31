@@ -5,66 +5,102 @@
     // Prevent all standard page links from navigating away globally
     document.querySelectorAll('a').forEach(link => link.setAttribute('href', 'javascript:void(0);'));
 
-    // --- UI STYLING ---
+    // --- BASE UI STYLING ---
     const style = document.createElement('style');
     style.innerHTML = `
+        :root {
+            --umm-bg-main: rgba(12, 12, 20, 0.96);
+            --umm-bg-side: #090911;
+            --umm-bg-content: #11111b;
+            --umm-accent: #818cf8;
+            --umm-accent-grad: linear-gradient(135deg, #6366f1, #4f46e5);
+            --umm-border: #373754;
+            --umm-text: #ffffff;
+            --umm-text-muted: #8e8ea8;
+            --umm-blur: none;
+        }
+        
         #universal-mod-menu {
-            position: fixed; top: 30px; right: 30px; width: 360px; height: 310px;
-            background: rgba(12, 12, 20, 0.96); color: #fff;
-            border: 2px solid #818cf8; border-radius: 12px;
+            position: fixed; top: 30px; right: 30px; width: 380px; height: 360px;
+            background: var(--umm-bg-main); color: var(--umm-text);
+            border: 2px solid var(--umm-border); border-radius: 12px;
             z-index: 99999999; font-family: 'Segoe UI', system-ui, sans-serif;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8); user-select: none; box-sizing: border-box;
             display: flex; flex-direction: column; overflow: hidden;
             transform-origin: top right;
+            backdrop-filter: var(--umm-blur); -webkit-backdrop-filter: var(--umm-blur);
+            transition: background 0.3s, border 0.3s, color 0.3s;
         }
         #umm-header {
-            padding: 12px; background: linear-gradient(135deg, #6366f1, #4f46e5); 
+            padding: 12px; background: var(--umm-accent-grad); 
             cursor: move; font-weight: bold; text-align: center; text-transform: uppercase; 
-            letter-spacing: 1px; font-size: 13px; flex-shrink: 0;
+            letter-spacing: 1px; font-size: 13px; flex-shrink: 0; color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        #umm-body { display: flex; flex-grow: 1; height: calc(100% - 60px); }
+        #umm-body { display: flex; flex-grow: 1; height: calc(100% - 60px); overflow: hidden; }
         #umm-tabs { 
-            width: 95px; background: #090911; border-right: 1px solid #222235; 
-            display: flex; flex-direction: column; gap: 2px; padding-top: 8px;
+            width: 100px; background: var(--umm-bg-side); border-right: 1px solid var(--umm-border); 
+            display: flex; flex-direction: column; gap: 2px; padding-top: 8px; flex-shrink: 0; transition: background 0.3s;
         }
         .umm-tab-btn {
-            background: transparent; color: #8e8ea8; border: none; padding: 12px 10px;
+            background: transparent; color: var(--umm-text-muted); border: none; padding: 12px 10px;
             cursor: pointer; font-size: 11px; font-weight: bold; text-align: left;
-            text-transform: uppercase; transition: all 0.2s;
+            text-transform: uppercase; transition: all 0.2s; white-space: nowrap;
         }
-        .umm-tab-btn:hover { background: #161626; color: #fff; }
-        .umm-tab-btn.active { background: #1c1c32; color: #818cf8; border-left: 3px solid #818cf8; }
-        #umm-content { flex-grow: 1; padding: 15px; overflow-y: auto; background: #11111b; }
+        .umm-tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--umm-text); }
+        .umm-tab-btn.active { background: var(--umm-bg-content); color: var(--umm-accent); border-left: 3px solid var(--umm-accent); }
+        
+        #umm-content { flex-grow: 1; padding: 15px; overflow-y: auto; overflow-x: hidden; background: var(--umm-bg-content); transition: background 0.3s; }
         .umm-panel { display: none; flex-direction: column; gap: 12px; }
         .umm-panel.active { display: flex; }
+        
         .umm-btn {
-            background: #1e1e2f; color: #fff; border: 1px solid #373754;
+            background: rgba(255,255,255,0.04); color: var(--umm-text); border: 1px solid var(--umm-border);
             padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600;
             transition: all 0.15s ease; text-align: center; font-size: 12px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box;
         }
-        .umm-btn:hover { background: #2b2b44; border-color: #818cf8; }
-        .umm-btn.active { background: #10b981; border-color: #059669; }
-        .umm-btn.danger { background: #ef4444; border-color: #dc2626; }
+        .umm-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--umm-accent); }
+        .umm-btn.active { background: #10b981; border-color: #059669; color: #fff; }
+        .umm-btn.danger { background: #ef4444; border-color: #dc2626; color: #fff; }
         .umm-btn.danger:hover { background: #dc2626; }
-        .umm-group { display: flex; flex-direction: column; gap: 5px; }
-        .umm-label { font-size: 11px; color: #9fa6b2; text-transform: uppercase; font-weight: bold; display: flex; justify-content: space-between; }
-        .umm-slider { -webkit-appearance: none; width: 100%; height: 6px; background: #27273a; border-radius: 3px; outline: none; }
-        .umm-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #818cf8; cursor: pointer; }
-        .umm-footer { text-align: center; font-size: 9px; color: #4b5563; padding: 5px; background: #07070c; }
-        .umm-dragging-element { box-shadow: 0 0 20px rgba(129, 140, 248, 0.8) !important; cursor: grabbing !important; z-index: 99999999 !important; }
+        
+        .umm-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; box-sizing: border-box; }
+        .umm-group { display: flex; flex-direction: column; gap: 5px; width: 100%; box-sizing: border-box; }
+        .umm-label { font-size: 11px; color: var(--umm-text-muted); text-transform: uppercase; font-weight: bold; display: flex; justify-content: space-between; }
+        .umm-slider { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none; }
+        .umm-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--umm-accent); cursor: pointer; }
+        
+        /* FIXED LAYOUT BOX MODEL FOR THE TEXTAREA */
+        .umm-textarea {
+            width: 100%; box-sizing: border-box; display: block;
+            background: rgba(0, 0, 0, 0.25); color: var(--umm-text); border: 1px solid var(--umm-border);
+            border-radius: 6px; padding: 8px; font-family: 'Consolas', monospace;
+            font-size: 11px; resize: none; height: 75px; outline: none;
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+        .umm-textarea:focus { border-color: var(--umm-accent); }
+        
+        .umm-footer { text-align: center; font-size: 9px; color: var(--umm-text-muted); padding: 5px; background: rgba(0,0,0,0.2); flex-shrink: 0; }
+        .umm-dragging-element { box-shadow: 0 0 20px var(--umm-accent) !important; cursor: grabbing !important; z-index: 99999999 !important; }
     `;
     document.head.appendChild(style);
+
+    const customStyleHook = document.createElement('style');
+    customStyleHook.id = 'umm-custom-user-styles';
+    document.head.appendChild(customStyleHook);
 
     // --- CREATE MENU DOM ---
     const menu = document.createElement('div');
     menu.id = 'universal-mod-menu';
     menu.innerHTML = `
-        <div id="umm-header">🌐 Chaos Engine v3.4</div>
+        <div id="umm-header">🌐 Chaos Engine v3.7</div>
         <div id="umm-body">
             <div id="umm-tabs">
                 <button class="umm-tab-btn active" data-panel="panel-core">UI Config</button>
                 <button class="umm-tab-btn" data-panel="panel-physics">Physics</button>
                 <button class="umm-tab-btn" data-panel="panel-magnet">Magnet</button>
+                <button class="umm-tab-btn" data-panel="panel-theme">Theme</button>
             </div>
             <div id="umm-content">
                 <div id="panel-core" class="umm-panel active">
@@ -75,6 +111,7 @@
                     <button id="umm-toggle-design" class="umm-btn">Toggle Design Mode</button>
                     <button id="umm-reset" class="umm-btn danger">Reset Website Layout</button>
                 </div>
+                
                 <div id="panel-physics" class="umm-panel">
                     <button id="umm-toggle-gravity" class="umm-btn">Apply Gravity</button>
                     <button id="umm-toggle-collision" class="umm-btn active">Spatial Grid Collisions: ON</button>
@@ -84,16 +121,106 @@
                         <input id="umm-gravity-slider" class="umm-slider" type="range" min="-1.5" max="2" step="0.1" value="0.4">
                     </div>
                 </div>
+                
                 <div id="panel-magnet" class="umm-panel">
-                    <p style="font-size:11px; margin:0; color:#9fa6b2; line-height:1.4;">Affects ALL elements on screen simultaneously.</p>
                     <button id="umm-toggle-magnet" class="umm-btn">Toggle Vortex Pull</button>
                     <button id="umm-toggle-tornado" class="umm-btn">Toggle Tornado Mode</button>
                 </div>
+
+                <div id="panel-theme" class="umm-panel">
+                    <span class="umm-label">Material Presets</span>
+                    <div class="umm-grid-2">
+                        <button class="umm-btn" data-theme="default">Indigo Core</button>
+                        <button class="umm-btn" data-theme="cyberpunk">Cyberpunk</button>
+                        <button class="umm-btn" data-theme="matrix">The Matrix</button>
+                        <button class="umm-btn" data-theme="solar">Solar Flare</button>
+                    </div>
+                    <button class="umm-btn" data-theme="glass">✨ Glassmorphism</button>
+                    
+                    <div class="umm-group" style="margin-top: 5px;">
+                        <span class="umm-label">Inject Live Custom CSS</span>
+                        <textarea id="umm-custom-css" class="umm-textarea" placeholder="/* Custom overrides */&#10;#universal-mod-menu {&#10;  border-radius: 4px;&#10;}"></textarea>
+                        <button id="umm-apply-css" class="umm-btn">Compile CSS</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="umm-footer">Chaos Engine v3.4</div>
+        <div class="umm-footer">Visual Material Engine Operational</div>
     `;
     document.body.appendChild(menu);
+
+    // --- INTERFACE MATERIAL MAPS ---
+    const themes = {
+        default: {
+            '--umm-bg-main': 'rgba(14, 16, 24, 0.72)',
+            '--umm-bg-side': '#0b0d14',
+            '--umm-bg-content': '#111522',
+            '--umm-accent': '#7c8cff',
+            '--umm-accent-grad': 'linear-gradient(135deg, #7c8cff, #4f6cff)',
+            '--umm-border': 'rgba(255,255,255,0.08)',
+            '--umm-text': 'rgba(255,255,255,0.92)',
+            '--umm-text-muted': 'rgba(255,255,255,0.55)',
+            '--umm-blur': '18px'
+        },
+        cyberpunk: {
+            '--umm-bg-main': 'rgba(10, 10, 14, 0.9)',
+            '--umm-bg-side': '#000000',
+            '--umm-bg-content': '#0f0f14',
+            '--umm-accent': '#ff2bd6',
+            '--umm-accent-grad': 'linear-gradient(135deg, #ff2bd6, #00f5ff)',
+            '--umm-border': 'rgba(255, 43, 214, 0.35)',
+            '--umm-text': '#dff7ff',
+            '--umm-text-muted': 'rgba(223,247,255,0.6)',
+            '--umm-blur': '14px'
+        },
+        matrix: {
+            '--umm-bg-main': 'rgba(3, 10, 6, 0.92)',
+            '--umm-bg-side': '#020a04',
+            '--umm-bg-content': '#04120a',
+            '--umm-accent': '#00ff88',
+            '--umm-accent-grad': 'linear-gradient(135deg, #00ff88, #003b1a)',
+            '--umm-border': 'rgba(0,255,136,0.25)',
+            '--umm-text': '#b6ffda',
+            '--umm-text-muted': 'rgba(182,255,218,0.5)',
+            '--umm-blur': '0px'
+        },
+        solar: {
+            '--umm-bg-main': 'rgba(20, 10, 10, 0.92)',
+            '--umm-bg-side': '#120606',
+            '--umm-bg-content': '#1a0b0b',
+            '--umm-accent': '#ff7a18',
+            '--umm-accent-grad': 'linear-gradient(135deg, #ff7a18, #ff3d3d)',
+            '--umm-border': 'rgba(255,122,24,0.35)',
+            '--umm-text': '#ffe9c7',
+            '--umm-text-muted': 'rgba(255,233,199,0.55)',
+            '--umm-blur': '12px'
+        },
+        glass: {
+            '--umm-bg-main': 'rgba(15, 15, 25, 0.75)',
+            '--umm-bg-side': 'rgba(0, 0, 0, 0.4)',
+            '--umm-bg-content': 'rgba(255, 255, 255, 0.03)',
+            '--umm-accent': '#a5b4fc',
+            '--umm-accent-grad': 'linear-gradient(135deg, #6366f1, #4f46e5)',
+            '--umm-border': 'rgba(255, 255, 255, 0.1)',
+            '--umm-text': '#ffffff',
+            '--umm-text-muted': '#9ca3af',
+            '--umm-blur': '16px'
+        }
+    };
+
+    menu.querySelectorAll('[data-theme]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const selected = themes[btn.getAttribute('data-theme')];
+            for (const [property, value] of Object.entries(selected)) {
+                menu.style.setProperty(property, value);
+            }
+        });
+    });
+
+    document.getElementById('umm-apply-css').addEventListener('click', () => {
+        const inputStyles = document.getElementById('umm-custom-css').value;
+        customStyleHook.innerHTML = inputStyles;
+    });
 
     // --- DRAGGING SYSTEM ---
     let menuDragging = false, mOffsetX, mOffsetY;
@@ -167,7 +294,6 @@
         collisionBtn.innerText = collisionActive ? "Spatial Grid Collisions: ON" : "Spatial Grid Collisions: OFF";
     });
 
-    // Friction Button Configuration
     const frictionBtn = document.getElementById('umm-toggle-friction');
     frictionBtn.addEventListener('click', () => {
         frictionActive = !frictionActive;
@@ -290,12 +416,10 @@
         });
     }
 
-    // --- CENTRAL CORE RUNTIME LOOP ---
+    // --- ENGINE LOOP ---
     function engineLoop() {
         const currentG = gravityActive ? gravityStrength : 0;
         const bounce = 0.6; 
-        
-        // Dynamic drag configurations based on UI toggles
         const normalFriction = frictionActive ? 0.98 : 1.0; 
         const magnetFriction = frictionActive ? 0.92 : 1.0;
 
@@ -342,7 +466,6 @@
                 p.y += p.vy;
             }
 
-            // Screen boundary bounce physics
             if (p.y + p.h > H) { p.y = H - p.h; p.vy = -p.vy * bounce; if(frictionActive) p.vx *= 0.85; }
             if (p.y < 0) { p.y = 0; p.vy = -p.vy * bounce; if(frictionActive) p.vx *= 0.85; }
             if (p.x < 0) { p.x = 0; p.vx = -p.vx * bounce; }
@@ -402,6 +525,7 @@
     document.getElementById('umm-reset').addEventListener('click', () => {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
+        customStyleHook.innerHTML = ''; 
         physicsElements.forEach(p => {
             if (p.orig === '') p.el.removeAttribute('style');
             else p.el.setAttribute('style', p.orig);
@@ -417,5 +541,9 @@
         tornadoBtn.classList.remove('active');
         frictionBtn.classList.add('active');
         frictionBtn.innerText = "Air Friction: ON";
+        
+        for (const [property, value] of Object.entries(themes.default)) {
+            menu.style.setProperty(property, value);
+        }
     });
 })();
