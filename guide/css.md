@@ -115,7 +115,7 @@ The structural center relies on a nested flex matrix layout.
 
 ---
 
-## 4. Navigation & Control Surface States
+## Navigation & Control Surface States
 
 ### Sidebar Tabs
 
@@ -184,7 +184,7 @@ The structural center relies on a nested flex matrix layout.
 
 ---
 
-## 5. Layout Scaffolding Grid
+## Layout Scaffolding Grid
 
 To maintain responsive spacing inside the narrow 280px workspace track, the theme uses CSS Grid matrices to handle multi-column split variations cleanly.
 
@@ -208,7 +208,7 @@ To maintain responsive spacing inside the narrow 280px workspace track, the them
 
 ---
 
-## 6. Form Field Elements
+## Form Field Elements
 
 ### Custom Input Range Sliders
 
@@ -258,7 +258,7 @@ Standard cross-browser element definitions are stripped using `-webkit-appearanc
 
 ---
 
-## 7. Interactive Physics States
+## Interactive Physics States
 
 When options like gravity or magnet vectors are active on the site, targeted items are decoupled globally. These specific classes provide extra styling cues to show which elements are currently active in the physics loop.
 
@@ -275,7 +275,7 @@ When options like gravity or magnet vectors are active on the site, targeted ite
 
 ---
 
-## 8. Theme Recipes for Custom Injection
+## Theme Recipes for Custom Injection
 
 You can inject these custom theme blocks straight into the `#umm-custom-css` textarea to overwrite your menu's styling live:
 
