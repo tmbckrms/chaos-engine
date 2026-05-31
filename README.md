@@ -29,4 +29,4 @@ Includes built-in layout configurations mapping custom variables onto the runtim
 * `Solar Flare`: High-contrast obsidian orange and warning-red visual layout.
 * `Glassmorphism`: A frosted translucent composite pane with safety dark filters designed for white or ultra-bright web page backdrops.
 
-Visit [Injected Live CSS Guide](https://github.com/tmbckrms/chaos-engine/guide/css.md)) to see the guide how to create your own theme.
+Visit [Injected Live CSS Guide](https://github.com/tmbckrms/chaos-engine/guide/css.md) to see the guide how to create your own theme.
