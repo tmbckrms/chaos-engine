@@ -43,9 +43,23 @@ The visual engine is built entirely on design tokens map-allocated to standard C
 }
 
 ```
+The visual engine is built entirely on design tokens map-allocated to standard CSS custom properties. Runtime theme switching is achieved by directly targeting the layout shell element using `Element.style.setProperty()`.
+
+### Design Token Implementation Mapping
+
+| Custom Property | Default Token Value | Target Elements / Components Using This Token |
+| --- | --- | --- |
+| `--umm-bg-main` | `rgba(12, 12, 20, 0.96)` | `#universal-mod-menu` (background color) |
+| `--umm-bg-side` | `#090911` | `#umm-tabs` (Side tab's background color) |
+| `--umm-bg-content` | `#11111b` | `#umm-content`, `.umm-tab-btn.active` (Side tabs background panel when active and wrapper's background color) |
+| `--umm-accent` | `#818cf8` | `.umm-tab-btn.active`, `.umm-slider::-webkit-slider-thumb`, `.umm-textarea:focus`, `.umm-btn:hover`, `.umm-dragging-element` (Active text side tabs, border left active side tab, focus states, and drag glow effects) |
+| `--umm-accent-grad` | `linear-gradient(135deg, ...)` | `#umm-header` (The main window drag-handle header background) |
+| `--umm-border` | `#373754` | `#universal-mod-menu`, `#umm-tabs`, `.umm-btn`, `.umm-textarea` (Outer window bounds, system dividers, input/button bounding boxes) |
+| `--umm-text` | `#ffffff` | `#universal-mod-menu`, `.umm-tab-btn:hover`, `.umm-btn`, `.umm-textarea` (Global primary text color, input strings, and hover text states) |
+| `--umm-text-muted` | `#8e8ea8` | `.umm-tab-btn` (inactive), `.umm-label`, `.umm-footer` (Inactive navigation tracks, configuration headers, status track data) |
+| `--umm-blur` | `none` | `#universal-mod-menu` (`backdrop-filter` and `-webkit-backdrop-filter` rendering pass targets) |
 
 ---
-
 ## Base Shell Layout (`#universal-mod-menu`)
 
 The main shell uses a fixed container that behaves predictably when scaled or subjected to mouse coordinate tracking loops.
