@@ -1,277 +1,32 @@
-# Chaos Engine
+# Chaos Engine v3.7
 
-Chaos Engine is a browser-based DOM physics sandbox that transforms webpage elements into interactive physics objects. It is designed for experimentation, visual effects, and physics simulations directly on existing websites through the browser console.
+Chaos Engine is a high-performance, injection-ready JavaScript physics sandbox utility. It transforms static DOM elements on any webpage into dynamic, interactive rigid bodies subject to physical forces, including gravity, spatial-grid collisions, magnetic attraction, and rotational fluid dynamics (tornado mode).
 
-## Features
-
-### Physics System
-
-Converts supported DOM elements into movable physics objects with:
-
-- Position and velocity tracking
-- Gravity simulation
-- Boundary collision handling
-- Object-to-object collision detection
-- Mouse drag interactions
-
-### Spatial Hash Grid Collision System
-
-Chaos Engine uses a spatial hash grid to improve collision performance.
-
-Benefits:
-
-- Reduces unnecessary collision checks
-- Improves performance on pages with many objects
-- Scales better than naïve pairwise collision detection
-
-### Gravity
-
-Apply configurable gravity to all physics objects.
-
-Range:
-
-```text
--1.5 to 2.0
-```
-
-Supports:
-
-- Standard gravity
-- Reduced gravity
-- Zero gravity
-- Negative gravity (anti-gravity)
-
-### Vortex Magnet
-
-Applies a force that pulls all physics objects toward the mouse cursor.
-
-Useful for:
-
-- Creating object clusters
-- Dynamic interactions
-- Controlled movement of large numbers of elements
-
-### Tornado Mode
-
-Applies both orbital and attraction forces around the cursor.
-
-Effects:
-
-- Circular motion around the cursor
-- Spiral movement
-- Emergent group behavior
-
-### Air Friction
-
-Optional velocity damping system.
-
-When enabled:
-
-- Objects gradually lose momentum
-- Simulations remain stable
-
-When disabled:
-
-- Objects retain momentum indefinitely
-- Motion becomes more chaotic
-
-### Drag and Throw
-
-Supported elements can be:
-
-- Dragged using the mouse
-- Released with momentum
-- Interacted with independently from the webpage layout
-
-### Design Mode
-
-Provides quick access to the browser's built-in `document.designMode`.
-
-Allows:
-
-- Editing text content
-- Modifying page elements
-- Testing layout changes
-
-### UI Scaling
-
-Adjusts the mod menu scale between:
-
-```text
-50% - 180%
-```
-
-### Reset System
-
-Restores the page to its pre-physics state by:
-
-- Stopping the simulation loop
-- Removing physics state
-- Restoring original inline styles
-- Disabling active effects
+It features a non-destructive modular UI menu built with CSS variables, allowing users to scale the interface, switch between visual material profiles, or hot-swap layouts with a built-in live CSS compiler.
 
 ---
 
-## Architecture
+## Feature Modules
 
-### Physics Objects
+### Physics Sandbox
 
-Each tracked element is represented by an object containing:
+* **Apply Gravity:** Toggles a downward/upward linear directional force vector acting on initialized elements. Includes an intensity slider managing fine-grain force metrics.
+* **Spatial Grid Collisions:** Employs a cellular partitioning grid system ($140\text{px}$ hash spacing) to process discrete element-to-element boundary detection without processing loops dragging performance down.
+* **Air Friction:** Adds a $0.98\times$ momentum dampening multiplier to velocities every frame loop to ensure organic deceleration. (Defaults to **ON**).
 
-```js
-{
-    id,
-    el,
+### Vector Manipulation
 
-    x,
-    y,
+* **Vortex Pull:** Generates a real-time positional vector calculation pulling all page bodies toward your cursor location using proximity-relative acceleration rates.
+* **Tornado Mode:** Adds a perpendicular velocity calculation offset ($\pm 90^\circ$ tracking angle) to turn cursor attraction into an orbital kinetic cyclone.
 
-    w,
-    h,
+### Theme & Appearance Engine
 
-    vx,
-    vy,
+Includes built-in layout configurations mapping custom variables onto the runtime CSS tree:
 
-    isDragged,
+* `Indigo Core`: Default clean cyberpunk dark layout.
+* `Cyberpunk`: High-visibility fluorescent neon yellow and pink aesthetics.
+* `The Matrix`: Terminal green aesthetics mapping dark values over runtime grids.
+* `Solar Flare`: High-contrast obsidian orange and warning-red visual layout.
+* `Glassmorphism`: A frosted translucent composite pane with safety dark filters designed for white or ultra-bright web page backdrops.
 
-    dragX,
-    dragY,
-
-    orig
-}
-```
-
-### Main Simulation Loop
-
-The engine runs through `requestAnimationFrame()`.
-
-Per frame:
-
-1. Apply gravity
-2. Apply magnetic or tornado forces
-3. Apply friction
-4. Update positions
-5. Resolve screen boundaries
-6. Process collisions
-7. Update DOM positions
-
-### Collision Detection
-
-Uses Axis-Aligned Bounding Box (AABB) collision detection.
-
-Collision resolution includes:
-
-- Overlap correction
-- Velocity exchange
-- Bounce response
-
-### Spatial Partitioning
-
-Objects are inserted into a grid:
-
-```js
-const CELL_SIZE = 140;
-```
-
-Only nearby objects within shared grid cells are checked for collisions.
-
-This significantly reduces collision complexity compared to checking every object against every other object.
-
----
-
-## Supported Elements
-
-By default, Chaos Engine targets:
-
-```text
-p
-img
-h1
-h2
-h3
-button
-input
-.card
-span
-a
-label
-svg
-```
-
-Elements must:
-
-- Be visible
-- Have measurable dimensions
-- Not be part of the Chaos Engine UI
-
----
-
-## Controls
-
-### UI Config
-
-- Menu Scale
-- Design Mode
-- Reset Layout
-
-### Physics
-
-- Gravity Toggle
-- Gravity Strength
-- Collision Toggle
-- Friction Toggle
-
-### Magnet
-
-- Vortex Magnet
-- Tornado Mode
-
----
-
-## Performance Notes
-
-Performance depends on:
-
-- Number of tracked elements
-- Complexity of the webpage
-- Browser rendering performance
-
-The spatial hash grid helps maintain responsiveness even when hundreds of objects are active simultaneously.
-
-Current soft limit:
-
-```text
-250 physics objects
-```
-
----
-
-## Usage
-
-1. Open a webpage.
-2. Open browser developer tools.
-3. Open the Console tab.
-4. Paste the Chaos Engine script.
-5. Press Enter.
-6. Use the mod menu to control simulation settings.
-
----
-
-## Version
-
-Current version:
-
-```text
-Chaos Engine v3.4
-```
-
-Major features:
-
-- DOM physics simulation
-- Spatial hash grid collisions
-- Gravity system
-- Tornado mode
-- Magnet system
-- Friction controls
-- Design mode integration
-- Reset and cleanup system
+Visit [Injected Live CSS Guide](https://github.com/tmbckrms/chaos-engine/guide/css.md)) to see the guide how to create your own theme.
