@@ -307,3 +307,33 @@ The spatial physics engine uses specific layout utility states during runtime lo
 ```
 
 * **Specificity Enforcements (`!important`)**: Forces inline absolute mapping rules applied during the Spatial Grid collision loops to yield to layout definitions during active element drag vectors.
+
+# CSS after v3.7
+So I'm lazy to add all new CSS thing in this really long guide so I decided to add CSS after 3.7.
+
+## Close Button
+```
+.umm-close-btn {
+    position: absolute; /* Don't touch */
+    right: 12px; /* Don't touch */
+    top: 50%; /* Don't touch */
+    transform: translateY(-50%); /* Don't touch */
+    background: rgba(0, 0, 0, 0.2); 
+    color: #fff; 
+    border: none;
+    width: 22px; /* Don't touch */
+    height: 22px; /* Don't touch */
+    border-radius: 50%; 
+    font-size: 11px;
+    font-weight: bold; 
+    cursor: pointer; 
+    display: flex; /* Don't touch */
+    align-items: center; /* Don't touch */
+    justify-content: center; /* Don't touch */
+    transition: all 0.15s ease;
+}
+.umm-close-btn:hover { 
+    background: #ef4444; 
+    color: #fff; 
+}
+```
