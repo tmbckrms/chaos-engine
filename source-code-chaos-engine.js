@@ -32,11 +32,21 @@
             transition: background 0.3s, border 0.3s, color 0.3s;
         }
         #umm-header {
+            position: relative; /* Anchor for absolute positioning of the close button */
             padding: 12px; background: var(--umm-accent-grad); 
             cursor: move; font-weight: bold; text-align: center; text-transform: uppercase; 
             letter-spacing: 1px; font-size: 13px; flex-shrink: 0; color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
+        .umm-close-btn {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.2); color: #fff; border: none;
+            width: 22px; height: 22px; border-radius: 50%; font-size: 11px;
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: all 0.15s ease;
+        }
+        .umm-close-btn:hover { background: #ef4444; color: #fff; }
+        
         #umm-body { display: flex; flex-grow: 1; height: calc(100% - 60px); overflow: hidden; }
         #umm-tabs { 
             width: 100px; background: var(--umm-bg-side); border-right: 1px solid var(--umm-border); 
@@ -94,7 +104,10 @@
     const menu = document.createElement('div');
     menu.id = 'universal-mod-menu';
     menu.innerHTML = `
-        <div id="umm-header">🌐 Chaos Engine v3.7</div>
+        <div id="umm-header">
+            🌐 Chaos Engine v3.8
+            <button id="umm-close" class="umm-close-btn" title="Close Menu">✕</button>
+        </div>
         <div id="umm-body">
             <div id="umm-tabs">
                 <button class="umm-tab-btn active" data-panel="panel-core">UI Config</button>
@@ -145,7 +158,7 @@
                 </div>
             </div>
         </div>
-        <div class="umm-footer">Visual Material Engine Operational</div>
+        <div class="umm-footer">Chaos Engine v3.8</div>
     `;
     document.body.appendChild(menu);
 
@@ -226,6 +239,7 @@
     let menuDragging = false, mOffsetX, mOffsetY;
     const header = document.getElementById('umm-header');
     header.addEventListener('mousedown', (e) => {
+        if (e.target.id === 'umm-close') return; // Blocks physics dragging when clicking the close button
         menuDragging = true;
         mOffsetX = e.clientX - menu.offsetLeft;
         mOffsetY = e.clientY - menu.offsetTop;
@@ -522,7 +536,7 @@
     verifyLoopInitiated();
 
     // --- RESET SYSTEM ---
-    document.getElementById('umm-reset').addEventListener('click', () => {
+    const resetLayout = () => {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
         customStyleHook.innerHTML = ''; 
@@ -545,5 +559,23 @@
         for (const [property, value] of Object.entries(themes.default)) {
             menu.style.setProperty(property, value);
         }
+    };
+
+    document.getElementById('umm-reset').addEventListener('click', resetLayout);
+
+    // --- SHUTDOWN ENGINE (CLOSE EXECUTION) ---
+    document.getElementById('umm-close').addEventListener('click', () => {
+        resetLayout();                            // Restores elements to original locations and clears physics values
+        document.designMode = 'off';               // Safe exit from edit layouts
+        style.remove();                           // Deletes engine styles
+        customStyleHook.remove();                 // Deletes customized text styles
+        menu.remove();                            // Drops the DOM Node component entirely
+        
+        // Optional loop reversal to make standard tags crawlable and operational again
+        document.querySelectorAll('a').forEach(link => {
+            if (link.getAttribute('href') === 'javascript:void(0);') {
+                link.removeAttribute('href'); 
+            }
+        });
     });
 })();
