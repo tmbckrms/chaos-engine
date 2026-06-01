@@ -9,6 +9,7 @@ The interface relies on an isolated, client-side decoupled layout model. It enca
 ```
 #universal-mod-menu [flex direction: column]
  ├── #umm-header (Fixed-track, Drag Hook)
+ │    └── .umm-close-btn [display: flex]
  ├── #umm-body [flex-grow: 1]
  │    ├── #umm-tabs (Sidebar Control, Width: 100px)
  │    └── #umm-content (Scrollable Panel Workspace)
